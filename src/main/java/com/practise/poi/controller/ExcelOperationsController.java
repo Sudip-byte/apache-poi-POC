@@ -1,5 +1,7 @@
 package com.practise.poi.controller;
 
+import java.io.IOException;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -8,6 +10,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.practise.poi.filetask.InsertRowsAndColumnTask;
 import com.practise.poi.filetask.ReadExcelFileToList;
+import com.practise.poi.filetask.WriteToExcelFile;
 
 @RestController
 public class ExcelOperationsController {
@@ -17,6 +20,9 @@ public class ExcelOperationsController {
 	
 	@Autowired
 	private InsertRowsAndColumnTask insertRowCol;
+	
+	@Autowired
+	private WriteToExcelFile writeToExcel;
 	
 	@GetMapping("/read")
 	public String readExcel()
@@ -28,6 +34,12 @@ public class ExcelOperationsController {
 	public String insertRowColInExcel()
 	{
 		return insertRowCol.insertRowCol();
+	}
+	
+	@GetMapping("/write")
+	public String writeToExcel() throws IOException
+	{
+		return writeToExcel.executeWriteOperation();
 	}
 
 }

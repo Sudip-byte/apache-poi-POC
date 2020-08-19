@@ -5,6 +5,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.atomic.AtomicReference;
 
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.Cell;
@@ -38,33 +40,36 @@ public class ReadExcelFileToList {
 			}
 
 			if (workbook != null) { // If workbook is not empty/null then proceed
-				workbook.forEach(sheet -> sheet.forEach(row -> // workbook contains many sheet , then for each sheet we
+				workbook.forEach(sheet -> sheet.forEach(row -> {// workbook contains many sheet , then for each sheet we
 																// process further and each sheet will have many rows
 																// then for each row we process further
+					AtomicReference<String> name = new AtomicReference<>("");
+					AtomicReference<String> shortCode = new AtomicReference<>("");
+					row.forEach(cell -> { // each row will have many cells then for each cell we process further.
 
-				row.forEach(cell -> {							//each row will have many cells then for each cell we process further.
-					String name = "";
-					String shortCode = "";
-					switch (cell.getCellType()) {
-					case STRING:
-						if (shortCode.equalsIgnoreCase("")) {
-							shortCode = cell.getStringCellValue().trim();
-						} else if (name.equalsIgnoreCase("")) {
-							// 2nd column
-							name = cell.getStringCellValue().trim();
-						} else {
-							// random data, leave it
-							log.info("Random data::" + cell.getStringCellValue());
+						switch (cell.getCellType()) {
+						case STRING:
+							if (shortCode.get().equalsIgnoreCase("")) {
+								shortCode.set(cell.getStringCellValue());
+								log.info("Short Code :: " + shortCode);
+							} else if (name.get().equalsIgnoreCase("")) {
+								// 2nd column
+								name.set(cell.getStringCellValue());
+								log.info("Name :: " + name);
+							} else {
+								// random data, leave it
+								log.info("Random data::" + cell.getStringCellValue());
+							}
+							break;
+						case NUMERIC:
+							log.info("Random data::" + cell.getNumericCellValue());
 						}
-						break;
-					case NUMERIC:
-						log.info("Random data::" + cell.getNumericCellValue());
-					}
 
-					Country ct = Country.builder().countryCode(shortCode).countryName(name).build();
+					});
+					Country ct = Country.builder().countryCode(shortCode.get()).countryName(name.get()).build();
 					countriesList.add(ct);
 					log.info("Country Name :: Code -> " + ct.getCountryName() + " :: " + ct.getCountryCode());
-				})));
+				}));
 			}
 
 			// close file input stream
@@ -80,12 +85,12 @@ public class ReadExcelFileToList {
 	public String readExcelData() {
 
 		List<Country> list = readExcelData("Country Data.xlsx");
-		log.info("Size "+list.size());
-		if(list.isEmpty())
+		log.info("Size " + list.size());
+		if (list.isEmpty())
 			return "Failure while reading excel";
 		else
 			return "Excel File reading was successfull";
-		
+
 	}
 
 }
