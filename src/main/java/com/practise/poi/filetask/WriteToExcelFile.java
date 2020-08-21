@@ -3,6 +3,7 @@ package com.practise.poi.filetask;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.List;
+import java.util.Objects;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
@@ -39,10 +40,10 @@ public class WriteToExcelFile {
 			workbook = new HSSFWorkbook();
 		}
 
-		if (workbook != null) {
+		if (Objects.nonNull(workbook)) {
 
 			Sheet sheet = workbook.createSheet("Countries");
-
+			
 			AtomicInteger rowIndex = new AtomicInteger(0);
 			list.forEach(country -> {
 
