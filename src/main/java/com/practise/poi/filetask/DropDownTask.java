@@ -43,6 +43,7 @@ public class DropDownTask {
 		name3.setRefersToFormula("'Data'!$F$2:$F$2");
 
 		DataValidationHelper dvHelper = sheet.getDataValidationHelper();
+		
 		CellRangeAddressList addressList = new CellRangeAddressList(0, 5, 0, 0);
 		DataValidationConstraint dvConstraint = dvHelper.createFormulaListConstraint("$D$1:$E$1");
 		DataValidation dataValidation = dvHelper.createValidation(dvConstraint, addressList);
@@ -61,6 +62,8 @@ public class DropDownTask {
 		DataValidation dataValidation2 = dvHelper.createValidation(dvConstraint2, addressList2);
 		dataValidation2.setSuppressDropDownArrow(true);
 		sheet.addValidationData(dataValidation2);
+		
+		// IF(C2="",Produce, INDIRECT("FakeRange"))
 		
 		/*
 		 * sheet.forEach(row->{ double date = 0.0; int rowNum = row.getRowNum();

@@ -9,7 +9,9 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.practise.poi.filetask.AutoFilterTask;
 import com.practise.poi.filetask.DropDownTask;
+import com.practise.poi.filetask.ImplementMacroCode;
 import com.practise.poi.filetask.InsertRowsAndColumnTask;
 import com.practise.poi.filetask.ReadExcelFileToList;
 import com.practise.poi.filetask.ReadFormulaFromExcel;
@@ -32,6 +34,12 @@ public class ExcelOperationsController {
 	
 	@Autowired
 	private DropDownTask dropDownTask;
+	
+	@Autowired
+	private AutoFilterTask filterTask;
+	
+	@Autowired
+	private ImplementMacroCode macroCode;
 	
 	@GetMapping("/read")
 	public String readExcel()
@@ -62,6 +70,20 @@ public class ExcelOperationsController {
 	{
 		
 		dropDownTask.dropDownTask();
+	}
+	
+	@GetMapping("/enableFilter")
+	public void enableFilter() throws IOException
+	{
+		
+		filterTask.setAutoFilter();
+	}
+	
+	@GetMapping("/enableMacro")
+	public void enableMacro() throws Exception
+	{
+		
+		macroCode.addMacroCode();
 	}
 
 }
